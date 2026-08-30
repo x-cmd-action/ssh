@@ -17,13 +17,16 @@ jobs:
           test -d ~/.ssh && echo "OK: ~/.ssh exists"
           test -f ~/.ssh/known_hosts && echo "OK: known_hosts present"
 
-      - name: ssh action with key loaded
+      - name: ssh action with key loaded (skipped when secret missing)
+        env:
+          HAS_KEY: ${{ secrets.SSH_PRIVATE_KEY != '' }}
+        if: env.HAS_KEY == 'true'
         uses: x-cmd-action/ssh@v1
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: verify key is loaded
-        if: ${{ secrets.SSH_PRIVATE_KEY != '' }}
+        if: env.HAS_KEY == 'true'
         shell: bash
         run: |
           ssh-add -l
