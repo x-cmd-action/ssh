@@ -40,34 +40,6 @@ steps:
 
 `x-cmd/action` 用前缀（`ssh_key`），是因为它 17 个 input 跨 ssh/git/docker/artifact —— 那里前缀是消歧用的。本 org 的独立 action 走无前缀约定。
 
-## 接线方式
-
-```yaml
-# action.yml（节选）
-runs:
-  using: composite
-  steps:
-    - shell: bash
-      env:
-        INPUT_KEY: ${{ inputs.key }}
-        INPUT_KNOWN_HOSTS_URL: ${{ inputs.known-hosts-url }}
-        INPUT_STRICT: ${{ inputs.strict }}
-      run: bash ${{ github.action_path }}/lib/ssh.sh
-```
-
-```bash
-# lib/ssh.sh（节选）
-eval "$(ssh-agent)"
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
-curl -fsSL "$INPUT_KNOWN_HOSTS_URL" >> ~/.ssh/known_hosts 2>/dev/null
-[ -z "$INPUT_SSH_KEY" ] || {
-    printf '%s\n' "$INPUT_SSH_KEY" > ~/.ssh/id_rsa
-    chmod 600 ~/.ssh/id_rsa
-    ssh-add ~/.ssh/id_rsa
-}
-```
-
 ## 许可证
 
 Apache 2.0 —— 见 [`LICENSE`](LICENSE)。

@@ -30,32 +30,6 @@ Any input can be omitted:
 | Nothing | agent starts + known_hosts (no key added) |
 | `known-hosts-url: '...'` | override the default `x-cmd/knownhost` URL |
 
-## How it's wired
-# action.yml (excerpt)
-runs:
-  using: composite
-  steps:
-    - shell: bash
-      env:
-        INPUT_KEY: ${{ inputs.key }}
-        INPUT_KNOWN_HOSTS_URL: ${{ inputs.known-hosts-url }}
-        INPUT_STRICT: ${{ inputs.strict }}
-      run: bash ${{ github.action_path }}/lib/ssh.sh
-```
-
-```bash
-# lib/ssh.sh (excerpt)
-eval "$(ssh-agent)"
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
-curl -fsSL "$INPUT_KNOWN_HOSTS_URL" >> ~/.ssh/known_hosts 2>/dev/null
-[ -z "$INPUT_SSH_KEY" ] || {
-    printf '%s\n' "$INPUT_SSH_KEY" > ~/.ssh/id_rsa
-    chmod 600 ~/.ssh/id_rsa
-    ssh-add ~/.ssh/id_rsa
-}
-```
-
 ## License
 
 Apache 2.0 — see [`LICENSE`](LICENSE).
