@@ -1,0 +1,18 @@
+name: test-ssh
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh action with no key (agent + known_hosts only)
+        uses: x-cmd-action/ssh@v1
+
+      - name: verify agent is running
+        shell: bash
+        run: |
+          ssh-add -l 2>&1 || echo "(no keys loaded, expected)"
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+          test -d ~/.ssh && echo "OK: ~/.ssh exists"
+          test -f ~/.ssh/known_hosts && echo "OK: known_hosts present"
