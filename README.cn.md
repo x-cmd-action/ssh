@@ -30,6 +30,16 @@ steps:
 | 都不给 | agent 起来 + known_hosts（不加载 key）|
 | `known-hosts-url: '...'` | 覆盖默认 `x-cmd/knownhost` URL |
 
+## 命名约定
+
+这个 action 用**无前缀**的 input 名（`ssh-key`、`strict`），不是 `ssh_ssh_key`、`ssh_strict`。原因：
+
+- 范围窄：这个 action 只管 ssh。`ssh-key` 没歧义，因为作用域里没别的东西。
+- action 名字本身就是用户的"作用域前缀"。
+- 无前缀读起来自然：`with: ssh-key: ${{ secrets.X }}` vs `with: ssh_ssh_key: ...`。
+
+`x-cmd/action` 用前缀（`ssh_key`），是因为它 17 个 input 跨 ssh/git/docker/artifact —— 那里前缀是消歧用的。本 org 的独立 action 走无前缀约定。
+
 ## 接线方式
 
 ```yaml
