@@ -31,8 +31,6 @@ Any input can be omitted:
 | `known-hosts-url: '...'` | override the default `x-cmd/knownhost` URL |
 
 ## How it's wired
-
-```yaml
 # action.yml (excerpt)
 runs:
   using: composite
