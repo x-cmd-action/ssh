@@ -22,7 +22,7 @@ runs:
     - name: ssh-agent + known_hosts + key
       shell: bash
       env:
-        INPUT_SSH_KEY: ${{ inputs.key }}
+        INPUT_KEY: ${{ inputs.key }}
         INPUT_KNOWN_HOSTS_URL: ${{ inputs.known-hosts-url }}
         INPUT_STRICT: ${{ inputs.strict }}
       run: bash ${{ github.action_path }}/lib/ssh.sh
