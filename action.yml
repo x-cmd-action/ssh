@@ -4,7 +4,7 @@ description: |
   Extracted from x-cmd/action's init step so it can be used standalone.
 
 inputs:
-  ssh-key:
+  key:
     description: SSH private key (PEM). If empty, ssh-agent still starts and known_hosts is loaded, but no key is added.
     required: false
   known-hosts-url:
@@ -22,7 +22,7 @@ runs:
     - name: ssh-agent + known_hosts + key
       shell: bash
       env:
-        INPUT_SSH_KEY: ${{ inputs.ssh-key }}
+        INPUT_SSH_KEY: ${{ inputs.key }}
         INPUT_KNOWN_HOSTS_URL: ${{ inputs.known-hosts-url }}
         INPUT_STRICT: ${{ inputs.strict }}
       run: bash ${{ github.action_path }}/lib/ssh.sh

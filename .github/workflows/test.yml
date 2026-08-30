@@ -16,3 +16,15 @@ jobs:
           echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
           test -d ~/.ssh && echo "OK: ~/.ssh exists"
           test -f ~/.ssh/known_hosts && echo "OK: known_hosts present"
+
+      - name: ssh action with key loaded
+        uses: x-cmd-action/ssh@v1
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: verify key is loaded
+        if: ${{ secrets.SSH_PRIVATE_KEY != '' }}
+        shell: bash
+        run: |
+          ssh-add -l
+          echo "OK: key loaded"

@@ -19,14 +19,14 @@ Mirrors the ssh init step from `x-cmd/action`, factored out as a standalone acti
 steps:
   - uses: x-cmd-action/ssh@v1
     with:
-      ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      key: ${{ secrets.SSH_PRIVATE_KEY }}
 ```
 
 Any input can be omitted:
 
 | Input set | Behavior |
 | --- | --- |
-| `ssh-key` only | agent starts + known_hosts + key loaded |
+| `key` only | agent starts + known_hosts + key loaded |
 | Nothing | agent starts + known_hosts (no key added) |
 | `known-hosts-url: '...'` | override the default `x-cmd/knownhost` URL |
 
