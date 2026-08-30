@@ -11,7 +11,7 @@
 1. 启动 `ssh-agent`
 2. 建 `~/.ssh`（权限 700）
 3. 从 `x-cmd/knownhost` 拉 `known_hosts`（可通过 `known-hosts-url` 覆盖）
-4. 把用户传的 `ssh-key` 加到 agent（只在给了 key 的时候）
+4. 把用户传的 `key` 加到 agent（只在给了 key 的时候）
 
 ## 用法
 
@@ -26,7 +26,7 @@ steps:
 
 | 给了哪些 | 行为 |
 | --- | --- |
-| 只给 `ssh-key` | agent 起来 + known_hosts + key 加载 |
+| 只给 `key` | agent 起来 + known_hosts + key 加载 |
 | 都不给 | agent 起来 + known_hosts（不加载 key）|
 | `known-hosts-url: '...'` | 覆盖默认 `x-cmd/knownhost` URL |
 
@@ -49,7 +49,7 @@ runs:
   steps:
     - shell: bash
       env:
-        INPUT_SSH_KEY: ${{ inputs.ssh-key }}
+        INPUT_KEY: ${{ inputs.key }}
         INPUT_KNOWN_HOSTS_URL: ${{ inputs.known-hosts-url }}
         INPUT_STRICT: ${{ inputs.strict }}
       run: bash ${{ github.action_path }}/lib/ssh.sh

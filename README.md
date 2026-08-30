@@ -11,7 +11,7 @@ Mirrors the ssh init step from `x-cmd/action`, factored out as a standalone acti
 1. Starts `ssh-agent`
 2. Creates `~/.ssh` (mode 700)
 3. Fetches `known_hosts` from `x-cmd/knownhost` (override via `known-hosts-url`)
-4. Adds the user-supplied `ssh-key` to the agent (only when provided)
+4. Adds the user-supplied `key` to the agent (only when provided)
 
 ## Usage
 
@@ -37,7 +37,7 @@ runs:
   steps:
     - shell: bash
       env:
-        INPUT_SSH_KEY: ${{ inputs.ssh-key }}
+        INPUT_KEY: ${{ inputs.key }}
         INPUT_KNOWN_HOSTS_URL: ${{ inputs.known-hosts-url }}
         INPUT_STRICT: ${{ inputs.strict }}
       run: bash ${{ github.action_path }}/lib/ssh.sh
