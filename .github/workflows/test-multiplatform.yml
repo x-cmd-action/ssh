@@ -143,18 +143,14 @@ jobs:
       - name: verify + report
         shell: bash
         run: |
-          test -d "$GITHUB_WORKSPACE/.git" || { echo "FAIL: not a git repo"; exit 1; }
-          test -f "$GITHUB_WORKSPACE/action.yml" || { echo "FAIL: action.yml missing"; exit 1; }
-          test "$(git -C "$GITHUB_WORKSPACE" config user.name)" = "github-actions[bot]" \
-              || { echo "FAIL: bot user.name not set"; exit 1; }
-          URL=$(git -C "$GITHUB_WORKSPACE" config remote.origin.url)
-          echo "$URL" | grep -qv "x-access-token" || { echo "FAIL: token in URL"; exit 1; }
+          test -d "$HOME/.ssh" || { echo "FAIL: ~/.ssh missing"; exit 1; }
+          test -f "$HOME/.ssh/known_hosts" || { echo "FAIL: known_hosts missing"; exit 1; }
+          KNOWN_HOSTS_LINES=$(wc -l < "$HOME/.ssh/known_hosts")
+          test "$KNOWN_HOSTS_LINES" -gt 0 || { echo "FAIL: known_hosts empty"; exit 1; }
 
           S=$(cat /tmp/bench_start)
           E=$(cat /tmp/bench_end)
           COLD_MS=$(( (E - S) / 1000000 ))
-          CLONE_BYTES=$(find "$GITHUB_WORKSPACE" -type f -exec wc -c {} + 2>/dev/null | tail -1 | awk '{print $1}')
-          CLONE_BYTES=${CLONE_BYTES:-0}
           BASH_VERSION_STR=$(bash --version | head -1)
 
           {
@@ -164,11 +160,11 @@ jobs:
             echo "|---|---|"
             echo "| result | PASS |"
             echo "| step wall-clock (cold) | ${COLD_MS} ms |"
-            echo "| cloned repo size | ${CLONE_BYTES} bytes |"
+            echo "| known_hosts lines | ${KNOWN_HOSTS_LINES} |"
             echo "| bash version | ${BASH_VERSION_STR} |"
           } >> "$GITHUB_STEP_SUMMARY"
 
-          echo "RESULT=PASS BASH=$BASH_VERSION_STR STEP_MS=$COLD_MS CLONE_BYTES=$CLONE_BYTES" >> "$GITHUB_OUTPUT"
+          echo "RESULT=PASS BASH=$BASH_VERSION_STR STEP_MS=$COLD_MS KNOWN_HOSTS_LINES=$KNOWN_HOSTS_LINES" >> "$GITHUB_OUTPUT"
 
   # ─── Aggregate + auto-issue ───
   report:
